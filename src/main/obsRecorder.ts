@@ -6,8 +6,11 @@ import { Size } from "electron";
 import path from 'path';
 import { ISceneItem, IScene, IInput, ISource, SceneFactory, InputFactory, Global, NodeObs } from "obs-studio-node";
 import { OurDisplayType } from "./types";
+import { IIPC } from "obs-studio-node";
 const waitQueue = new WaitQueue<any>();
 const { v4: uuid } = require('uuid');
+
+const obsIPC = NodeObs.IPC as IIPC;
 
 let obsInitialized = false;
 // Timer for periodically checking the size of the video source
@@ -59,7 +62,7 @@ const initialize = (options: RecorderOptionsType) => {
 */
 const initOBS = () => {
   console.debug('[OBS] Initializing OBS...');
-  NodeObs.IPC.host(`warcraft-recorder-${uuid()}`);
+  obsIPC.host(`warcraft-recorder-${uuid()}`);
   NodeObs.SetWorkingDirectory(fixPathWhenPackaged(path.join(__dirname,'../../', 'node_modules', 'obs-studio-node')));
 
   const obsDataPath = fixPathWhenPackaged(path.join(__dirname, 'osn-data')); // OBS Studio configs and logs
